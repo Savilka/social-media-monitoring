@@ -19,7 +19,7 @@ import (
 	//
 	//    sw "github.com/myname/myrepo/go"
 	//
-	sw "github.com/savilka/social-media-monitoring/go"
+	sw "github.com/savilka/social-media-monitoring/gen/go"
 )
 
 func main() {

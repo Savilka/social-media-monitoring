@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/Savilka/social-media-monitoring/internal/api/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 )
@@ -18,5 +19,9 @@ func (app *App) InitRouter() {
 }
 
 func (app *App) Run() {
+	err := godotenv.Load("./conf/.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	log.Fatal(http.ListenAndServe(":8080", app.Router))
 }

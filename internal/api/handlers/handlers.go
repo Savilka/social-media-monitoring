@@ -1,9 +1,7 @@
 package handlers
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
-func (app *api.App) searchInGroups(c *gin.Context) {
+func SearchInGroups(c *gin.Context) {
 
 }

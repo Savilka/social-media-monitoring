@@ -1,4 +1,4 @@
-module github.com/savilka/social-media-monitoring
+module github.com/Savilka/social-media-monitoring
 
 go 1.18
 

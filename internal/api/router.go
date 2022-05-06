@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/Savilka/social-media-monitoring/internal/api/handlers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -14,7 +15,7 @@ type App struct {
 
 func (app *App) InitRouter() {
 	app.Router = gin.Default()
-
+	app.Router.Use(cors.Default())
 	app.Router.POST("/groups", handlers.SearchInGroups)
 }
 

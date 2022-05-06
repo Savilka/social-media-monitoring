@@ -39,5 +39,9 @@ func SearchInGroup(wg *sync.WaitGroup, ownerId int, ch chan []model.Post, query 
 		return
 	}
 
+	for i, item := range response.Response.Items {
+		response.Response.Items[i].Link = fmt.Sprintf("vk.com/wall-%d_%d", -ownerId, item.Id)
+	}
+
 	ch <- response.Response.Items
 }

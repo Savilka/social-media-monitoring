@@ -7,20 +7,16 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"regexp"
 )
 
-func GetScreenName(url string) (string, error) {
-	var screenName string
-	if url[0:7] == "vk.com/" {
-		screenName = url[7:]
+func GetScreenName(url string, reg *regexp.Regexp) (string, error) {
+	splitUrl := reg.Split(url, -1)
+	if len(splitUrl) == 1 {
+		return "", errors.New("bad url")
 	} else {
-		if url[0:15] == "https://vk.com/" {
-			screenName = url[15:]
-		} else {
-			return "", errors.New("not valid url")
-		}
+		return splitUrl[1], nil
 	}
-	return screenName, nil
 }
 
 type Response struct {

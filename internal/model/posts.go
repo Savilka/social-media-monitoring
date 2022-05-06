@@ -6,6 +6,7 @@ type PostResponse struct {
 }
 
 type Post struct {
+	Link string
 	Id   int
 	Date int
 	Text string

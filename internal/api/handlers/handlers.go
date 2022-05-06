@@ -5,7 +5,9 @@ import (
 	"github.com/Savilka/social-media-monitoring/internal/model"
 	"github.com/Savilka/social-media-monitoring/internal/utils"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"regexp"
 	"sync"
 )
 
@@ -17,12 +19,19 @@ func SearchInGroups(c *gin.Context) {
 		return
 	}
 
+	reg, err := regexp.Compile("(http?://)?(m.)?(vk.com/)")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	var posts []model.Post
 	wg := sync.WaitGroup{}
 	ch := make(chan []model.Post, len(req.Links))
 	for _, link := range req.Links {
-		screenName, err := utils.GetScreenName(link)
+		screenName, err := utils.GetScreenName(link, reg)
 		if err != nil {
+			log.Println(err.Error())
 			continue
 		}
 

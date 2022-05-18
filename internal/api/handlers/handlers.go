@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	comments2 "github.com/Savilka/social-media-monitoring/internal/comment"
+	"github.com/Savilka/social-media-monitoring/internal/comment"
 	"github.com/Savilka/social-media-monitoring/internal/groups"
 	"github.com/Savilka/social-media-monitoring/internal/model"
 	"github.com/Savilka/social-media-monitoring/internal/utils"
@@ -65,7 +65,7 @@ func CommentsHandler(c *gin.Context) {
 		return
 	}
 
-	var comments []model.Post
+	var comments []model.Comment
 	wg := sync.WaitGroup{}
 	ch := make(chan []model.Comment, len(req.Links))
 	for _, link := range req.Links {
@@ -80,6 +80,13 @@ func CommentsHandler(c *gin.Context) {
 			continue
 		}
 
-		comment.SearchInComments()
+		wg.Add(1)
+		comment.SearchInComments(&wg, ch, id, req.Text)
 	}
+
+	wg.Wait()
+	for i := 0; i < len(req.Links); i++ {
+		comments = append(comments, <-ch...)
+	}
+	c.JSON(http.StatusOK, comments)
 }

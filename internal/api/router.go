@@ -16,7 +16,8 @@ type App struct {
 func (app *App) InitRouter() {
 	app.Router = gin.Default()
 	app.Router.Use(cors.Default())
-	app.Router.POST("/groups", handlers.SearchInGroups)
+	app.Router.POST("/groups", handlers.WallHandler)
+	app.Router.POST("/comment", handlers.CommentsHandler)
 }
 
 func (app *App) Run() {

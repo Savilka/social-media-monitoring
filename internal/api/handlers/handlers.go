@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	comments2 "github.com/Savilka/social-media-monitoring/internal/comment"
 	"github.com/Savilka/social-media-monitoring/internal/groups"
 	"github.com/Savilka/social-media-monitoring/internal/model"
 	"github.com/Savilka/social-media-monitoring/internal/utils"
@@ -11,7 +12,7 @@ import (
 	"sync"
 )
 
-func SearchInGroups(c *gin.Context) {
+func WallHandler(c *gin.Context) {
 	var req model.Request
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -48,4 +49,37 @@ func SearchInGroups(c *gin.Context) {
 		posts = append(posts, <-ch...)
 	}
 	c.JSON(http.StatusOK, posts)
+}
+
+func CommentsHandler(c *gin.Context) {
+	var req model.Request
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	reg, err := regexp.Compile("(http?://)?(m.)?(vk.com/)")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var comments []model.Post
+	wg := sync.WaitGroup{}
+	ch := make(chan []model.Comment, len(req.Links))
+	for _, link := range req.Links {
+		screenName, err := utils.GetScreenName(link, reg)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		id := utils.GetId(screenName)
+		if id == 0 {
+			continue
+		}
+
+		comment.SearchInComments()
+	}
 }
